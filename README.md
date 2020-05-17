@@ -1,2 +1,2 @@
-# sharfood
-A sharing economy solution to the food industry struggle
+# Mamakitchen
+An old solution to new challanges
