@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter} from "react-router-dom";
 import './index.css';
 import MamaApp from './MamaApp';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <MamaApp />
+    <BrowserRouter>
+      <MamaApp />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

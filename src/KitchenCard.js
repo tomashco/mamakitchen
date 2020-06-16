@@ -1,11 +1,11 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Card, Button } from 'antd';
+import { Card, Button, Typography } from 'antd';
 import {createUseStyles} from 'react-jss'
 import sizes from "./styles/sizes";
 
-const { Meta } = Card;
+const { Title } = Typography;
 
 const useStyles = createUseStyles({
   container: {
@@ -26,8 +26,13 @@ const useStyles = createUseStyles({
   }
 });
 
+const KitchenCard = ({kitchenInfo, history}) => {
+  const {name, src, description, id} = kitchenInfo;
 
-const KitchenCard = ({kitchenName,src}) => {
+  const goToKitchen = () => {
+    history.push(`/kitchen/${id}`);
+  }
+
   const classes = useStyles()
   return (
     <Card
@@ -35,10 +40,14 @@ const KitchenCard = ({kitchenName,src}) => {
     className={classes.container}
     cover={<img alt="example" src={src} />}
     >
-    <Meta title={kitchenName} description="Coming Soon" />
-    High level description of the kitchen
+        <Title level={3}>{name}</Title>
+    {description}
     <div className={classes.button}>
-      <Button type="primary" classname={classes.button}>See More</Button>
+      <Button
+        type="primary"
+        classname={classes.button}
+        onClick={goToKitchen}
+        >See More</Button>
     </div>
     </Card>
   );

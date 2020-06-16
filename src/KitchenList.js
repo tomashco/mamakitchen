@@ -14,12 +14,17 @@ const useStyles = createUseStyles({
   }
 });
 
-const KitchenList = ({kitchens}) => {
+const KitchenList = ({kitchens, history}) => {
   const classes = useStyles()
 
   return (
     <div className={classes.kitchenList}>
-    {kitchens.map((kitchen) => <KitchenCard key={kitchen.id} {...kitchen} />)}
+    {kitchens.map((kitchen) =>
+      <KitchenCard
+        key={kitchen.id}
+        history={history}
+        kitchenInfo={kitchen}
+      />)}
     </div>
   );
 }
