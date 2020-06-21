@@ -45,7 +45,7 @@ const KitchenCard = ({kitchenInfo, history}) => {
     <div className={classes.button}>
       <Button
         type="primary"
-        classname={classes.button}
+        className={classes.button}
         onClick={goToKitchen}
         >See More</Button>
     </div>

@@ -1,7 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import { withFirebase } from './Firebase';
 import { Layout, Menu, Breadcrumb, Typography } from 'antd';
-import './MamaApp.css';
+import './App.css';
 import {createUseStyles} from 'react-jss'
 
 const { Header, Content, Footer } = Layout;
@@ -33,7 +34,7 @@ const useStyles = createUseStyles({
   }
 });
 
-function AppLayout({children, match}) {
+function AppLayout({children, match, firebase, authUser}) {
 
   const urlToArr = (url) => {
     return url.replaceAll("-", " ").split("/").filter(el => el !== "").map(str => str.charAt(0).toUpperCase() + str.slice(1))
@@ -49,17 +50,26 @@ function AppLayout({children, match}) {
         level={3}
         >
           <Link to="/">MamaKitchen</Link></Title>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
-        <Menu.Item key="1">Log In</Menu.Item>
-        <Menu.Item key="2">Sign In</Menu.Item>
-      </Menu>
+        {authUser
+          ? <Menu theme="dark" mode="horizontal" className={classes.menu}>
+            <Menu.Item key="1">
+              <Link to="/" onClick={firebase.doSignOut}>Sign Out</Link>
+            </Menu.Item>
+          </Menu>
+          : <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
+              <Menu.Item key="1">
+                <Link to="/login">Log In</Link>
+              </Menu.Item>
+              <Menu.Item key="2">
+                <Link to="/signin">Sign In</Link>
+              </Menu.Item>
+          </Menu>
+        }
     </Header>
     <Content className={classes.content}>
       <Breadcrumb className={classes.breadcrumb}>
-        {urlArray.map(urlItem => <Breadcrumb.Item>{urlItem}</Breadcrumb.Item>)}
-        {/* TODO: da cambiare in maniera dinamica rispetto alla pagina */}
-        {/* <Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>kitchen list</Breadcrumb.Item> */}
+        {urlArray.map(urlItem =>
+          <Breadcrumb.Item key={urlItem}>{urlItem}</Breadcrumb.Item>)}
       </Breadcrumb>
       <Layout className={classes.layout}>
         <Content className={classes.content}>
@@ -72,4 +82,4 @@ function AppLayout({children, match}) {
   );
 }
 
-export default AppLayout;
+export default withFirebase(AppLayout);

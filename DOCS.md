@@ -2,6 +2,16 @@
 Mamakitchen wants to be a meals marketplace open to every chef that wants to sell his food.
 Through the platform every Chef is able to show his personal selection of meals and let the user place his order.
 
+## App Structure
+- index.js
+  - App.js
+    Route: /login -> Login.js
+    Route: /signin -> Signin.js
+    Route: /kitchen/:id -> Kitchen.js
+                            - RecipeList.js
+    Route: / -> KitchenList.js
+                  - KitchenCard.js
+
 ## For Chefs:
 - Login
   - personal page

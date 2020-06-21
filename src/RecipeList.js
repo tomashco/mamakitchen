@@ -1,6 +1,6 @@
 import React from 'react';
 import {createUseStyles} from 'react-jss'
-import { List, Avatar, Space } from 'antd';
+import { Space } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 
@@ -30,7 +30,7 @@ const RecipeList = ({recipes}) => {
   return (
     <div>
       {recipes.map((recipe) => (
-        <div className={classes.recipeRow}>
+        <div key={recipe.name} className={classes.recipeRow}>
          <img
           width={100}
           alt={recipe.name}
