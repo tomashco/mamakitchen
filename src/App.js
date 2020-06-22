@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Route, Switch} from 'react-router-dom';
-import { withFirebase } from './Firebase';
+import { withAuthentication } from './Session';
+
 import AppLayout from './AppLayout'
 import KitchenList from './KitchenList'
 import Kitchen from './Kitchen'
@@ -9,20 +10,9 @@ import Signin from './Signin'
 import kitchenData from './dummyData/kitchenData'
 import recipeData from './dummyData/recipeData'
 
-function App({firebase}) {
+const App = () => {
   const [kitchens, setKitchens] = useState(kitchenData)
   const [recipes, setRecipes] = useState(recipeData)
-  const [authUser, setAuthUser] = useState(null)
-
-  console.log("authUser:", authUser)
-
-  useEffect(() => {
-    firebase.auth.onAuthStateChanged(authUser => {
-      authUser ?
-        setAuthUser(authUser.email)
-      : setAuthUser(null)
-      });
-    });
 
   const findKitchen = (kitchenId) => {
     return kitchens.find((kitchen) => {
@@ -39,7 +29,7 @@ function App({firebase}) {
       <Switch location={location}>
         <Route exact path="/login"
           render={(routeProps) => (
-            <AppLayout {...routeProps} authUser={authUser}>
+            <AppLayout {...routeProps} >
               <Login
                 {...routeProps}
                 />
@@ -48,14 +38,25 @@ function App({firebase}) {
         />
         <Route exact path="/signin"
           render={(routeProps) => (
-            <AppLayout {...routeProps} authUser={authUser}>
+            <AppLayout {...routeProps} >
               <Signin {...routeProps}/>
+            </AppLayout>
+            )}
+        />
+        <Route exact path="/kitchen/edit/:id"
+          render={(routeProps) => (
+            <AppLayout {...routeProps} >
+              <Kitchen
+                {...routeProps}
+                kitchenInfo={findKitchen(routeProps.match.params.id)}
+                recipes = {findRecipes(routeProps.match.params.id)}
+                />
             </AppLayout>
             )}
         />
         <Route exact path="/kitchen/:id"
           render={(routeProps) => (
-            <AppLayout {...routeProps} authUser={authUser}>
+            <AppLayout {...routeProps} >
               <Kitchen
                 {...routeProps}
                 kitchenInfo={findKitchen(routeProps.match.params.id)}
@@ -68,7 +69,7 @@ function App({firebase}) {
           exact
           path="/"
           render={(routeProps) => (
-            <AppLayout {...routeProps} authUser={authUser}>
+            <AppLayout {...routeProps} >
               <KitchenList
                 kitchens={kitchens}
                 {...routeProps}
@@ -77,7 +78,7 @@ function App({firebase}) {
           )}/>
         <Route
           render={(routeProps) => (
-            <AppLayout {...routeProps} authUser={authUser}>
+            <AppLayout {...routeProps} >
               <KitchenList
                 kitchens={kitchenData}
                 {...routeProps}
@@ -89,4 +90,4 @@ function App({firebase}) {
   );
 }
 
-export default withFirebase(App);
+export default withAuthentication(App); //aggiunge authUser context provider

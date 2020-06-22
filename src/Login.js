@@ -15,8 +15,7 @@ const useStyles = createUseStyles({
     margin: "0 auto",
     [sizes.down("sm")]:{
       width: "100%",
-    },
-
+    }
   }
 });
 
