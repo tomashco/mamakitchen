@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
-import { withFirebase } from './Firebase';
-import { AuthUserContext, withAuthentication } from './Session';
 import { Layout, Menu, Breadcrumb, Typography } from 'antd';
 import './App.css';
 import {createUseStyles} from 'react-jss'
+import FirebaseContext from './Contexts/firebaseContext';
+import {useAuth} from './Contexts/userContext'
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -34,14 +34,21 @@ const useStyles = createUseStyles({
     textAlign: 'center'
   }
 });
-// {children, match, firebase, authUser}
-function AppLayout({children, firebase, history, location, match, findKitchen}) {
+
+function AppLayout({children, history, location, match}) {
 
   const urlToArr = (url) => {
-    return url.replaceAll("-", " ").split("/").filter(el => el !== "").map(str => str.charAt(0).toUpperCase() + str.slice(1))
+    return url
+      .replaceAll("-", " ")
+      .split("/")
+      .filter(el => el !== "")
+      .map(str => str.charAt(0).toUpperCase() + str.slice(1))
   }
+
   const classes = useStyles()
   const urlArray = urlToArr(match.url)
+  const firebase = useContext(FirebaseContext)
+  const { user } = useAuth()
 
   return (
     <Layout>
@@ -51,27 +58,24 @@ function AppLayout({children, firebase, history, location, match, findKitchen}) 
         level={3}
         >
         <Link to="/">MamaKitchen</Link></Title>
-        <AuthUserContext.Consumer>
-          {authUser =>
-          authUser ?
-            <Menu theme="dark" mode="horizontal" className={classes.menu}>
-              {/* <Menu.Item key="1">
-                <Link to={`/kitchen/edit/${authUser => findKitchen(authUser)}`}>My kitchen</Link>
-              </Menu.Item> */}
-              <Menu.Item key="2">
-                <Link to="/" onClick={firebase.doSignOut}>Sign Out</Link>
-              </Menu.Item>
-            </Menu>
-            : <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
-                <Menu.Item key="1">
-                  <Link to="/login">Log In</Link>
-                </Menu.Item>
-                <Menu.Item key="2">
-                  <Link to="/signin">Sign In</Link>
-                </Menu.Item>
-            </Menu>
-          }
-        </AuthUserContext.Consumer>
+        {user ?
+          <Menu theme="dark" mode="horizontal" className={classes.menu}>
+            <Menu.Item key="1">
+              <Link to="/" onClick={firebase.doSignOut}>Sign Out</Link>
+            </Menu.Item>
+            {/* <Menu.Item key="1">
+              <Link to={`/kitchen/edit/${authUser => findKitchen(authUser)}`}>My kitchen</Link>
+            </Menu.Item> */}
+          </Menu>
+        : <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
+            <Menu.Item key="1">
+              <Link to="/login">Log In</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Link to="/signin">Sign In</Link>
+            </Menu.Item>
+          </Menu>
+        }
     </Header>
     <Content className={classes.content}>
       <Breadcrumb className={classes.breadcrumb}>
@@ -89,4 +93,4 @@ function AppLayout({children, firebase, history, location, match, findKitchen}) 
   );
 }
 
-export default withFirebase(AppLayout); //aggiunge firebase context consumer
+export default AppLayout;

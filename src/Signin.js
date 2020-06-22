@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {createUseStyles} from 'react-jss'
-import { withFirebase } from './Firebase';
+import FirebaseContext from './Contexts/firebaseContext';
+
 import {
   Space,
   Typography,
@@ -19,6 +20,7 @@ import {
   HomeOutlined } from '@ant-design/icons';
 
 import sizes from "./styles/sizes";
+import { useContext } from 'react';
 
 const { Title } = Typography;
 
@@ -37,21 +39,20 @@ const useStyles = createUseStyles({
 const Signin = props => {
   const classes = useStyles()
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
+  const firebase = useContext(FirebaseContext)
 
   const [form] = Form.useForm();
 
   const onFinish = values => {
     const {email, password} = values;
     console.log('Received values of form: ', values);
-    props.firebase
+    firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
-        console.log("successfully signed in!", authUser)
         message.success('successfully signed in!');
         setTimeout(() => props.history.push("/"), 500);
       })
       .catch(error => {
-        console.log("error during sign in:", error)
         message.error(error.message);
         });
   };
@@ -164,4 +165,4 @@ const Signin = props => {
   );
 }
 
-export default withFirebase(Signin);
+export default Signin;

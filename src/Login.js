@@ -1,10 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import { withFirebase } from './Firebase';
+import FirebaseContext from './Contexts/firebaseContext';
+
 import {createUseStyles} from 'react-jss'
 import { message, Space, Typography, Form, Input, Button, Checkbox } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import sizes from "./styles/sizes";
+import { useContext } from 'react';
 
 const { Title } = Typography;
 
@@ -21,20 +23,18 @@ const useStyles = createUseStyles({
 
 const Login = (props) => {
   const classes = useStyles()
+  const firebase = useContext(FirebaseContext)
 
   const onFinish = values => {
     const {email, password} = values;
-    console.log('Received values of form: ', values);
-    props.firebase
-    .doSignInWithEmailAndPassword(email, password)
-    .then(authUser => {
-      console.log("successfully logged in!", authUser)
-      message.success('successfully logged in!');
-      setTimeout(() => props.history.push("/"), 500);
-      ;
-    })
+    firebase
+      .doSignInWithEmailAndPassword(email, password)
+      .then(authUser => {
+        message.success('successfully logged in!');
+        setTimeout(() => props.history.push("/"), 500);
+        ;
+      })
       .catch(error => {
-        console.log("error during login:", error)
         message.error(error.message);
       });
 
@@ -69,12 +69,6 @@ const Login = (props) => {
             prefix={<MailOutlined className="site-form-item-icon" />}
           />
       </Form.Item>
-        {/* <Form.Item
-          name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
-        >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-        </Form.Item> */}
         <Form.Item
           name="password"
           rules={[{ required: true, message: 'Please input your Password!' }]}
@@ -101,4 +95,4 @@ const Login = (props) => {
   );
 }
 
-export default withFirebase(Login);
+export default Login;
