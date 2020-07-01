@@ -7,6 +7,7 @@ import Kitch5 from "../img/kitch-5.jpg"
 export default [
   {
     name: "Bunya nuts black",
+    username: "",
     id: "bunya-nuts-black",
     src: Kitch1,
     description: "Brussels sprout coriander water chestnut gourd swiss chard wakame kohlrabi beetroot carrot watercress. Corn amaranth salsify bunya nuts nori azuki bean chickweed potato bell pepper artichoke.",
@@ -14,6 +15,7 @@ export default [
   },
   {
     name: "beetroot carrot watercress",
+    username: "",
     id: "beetroot-carrot-watercress",
     src: Kitch2,
     description: "Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic.",
@@ -21,6 +23,7 @@ export default [
   },
   {
     name: "prairie turnip leek",
+    username: "",
     id: "prairie-turnip-leek",
     src: Kitch3,
     description: "Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato.",
@@ -28,6 +31,7 @@ export default [
   },
   {
     name: "Chickweed okra pea",
+    username: "",
     id: "chickweed-okra-pea",
     src: Kitch4,
     description:"Dandelion cucumber earthnut pea peanut soko zucchini. Turnip greens yarrow ricebean rutabaga endive cauliflower sea lettuce kohlrabi amaranth water spinach avocado daikon napa cabbage asparagus winter purslane kale.",
@@ -35,6 +39,7 @@ export default [
   },
   {
     name: "salsify pea sprouts",
+    username: "",
     id: "salsify-pea-sprouts",
     src: Kitch5,
     description: "Lotus root water spinach fennel kombu maize bamboo shoot green bean swiss chard seakale pumpkin onion chickpea gram corn pea.",

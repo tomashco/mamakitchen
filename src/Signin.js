@@ -44,11 +44,20 @@ const Signin = props => {
   const [form] = Form.useForm();
 
   const onFinish = values => {
-    const {email, password} = values;
+    const {email, password, username} = values;
     console.log('Received values of form: ', values);
     firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+          // Create a user in your Firebase realtime database
+          return firebase
+          .user(authUser.user.uid)
+          .set({
+          username,
+          email
+          });
+        })
+        .then(() => {
         message.success('successfully signed in!');
         setTimeout(() => props.history.push("/"), 500);
       })

@@ -61,11 +61,12 @@ function AppLayout({children, history, location, match}) {
         {user ?
           <Menu theme="dark" mode="horizontal" className={classes.menu}>
             <Menu.Item key="1">
+
+              <Link to="/kitchen/edit/new">new kitchen</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
               <Link to="/" onClick={firebase.doSignOut}>Sign Out</Link>
             </Menu.Item>
-            {/* <Menu.Item key="1">
-              <Link to={`/kitchen/edit/${authUser => findKitchen(authUser)}`}>My kitchen</Link>
-            </Menu.Item> */}
           </Menu>
         : <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
             <Menu.Item key="1">

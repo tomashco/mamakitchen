@@ -38,7 +38,7 @@ const KitchenCard = ({kitchenInfo, history}) => {
     <Card
     hoverable
     className={classes.container}
-    cover={<img alt="example" src={src} />}
+    cover={<img alt={src} src={src} />}
     >
         <Title level={3}>{name}</Title>
     {description}
