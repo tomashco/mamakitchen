@@ -1,26 +1,10 @@
 import React, {useState} from 'react';
 import {createUseStyles} from 'react-jss'
-import FirebaseContext from './Contexts/firebaseContext';
-
-import {
-  Space,
-  Typography,
-  Form,
-  Input,
-  Tooltip,
-  Button,
-  AutoComplete,
-  message
-} from 'antd';
-import {
-  QuestionCircleOutlined,
-  UserOutlined,
-  LockOutlined,
-  MailOutlined,
-  HomeOutlined } from '@ant-design/icons';
+import { useFirebase } from 'react-redux-firebase'
+import { Space, Typography, Form, Input, Tooltip, Button, AutoComplete, message } from 'antd';
+import { QuestionCircleOutlined, UserOutlined, LockOutlined, MailOutlined, HomeOutlined } from '@ant-design/icons';
 
 import sizes from "./styles/sizes";
-import { useContext } from 'react';
 
 const { Title } = Typography;
 
@@ -39,31 +23,24 @@ const useStyles = createUseStyles({
 const Signin = props => {
   const classes = useStyles()
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-  const firebase = useContext(FirebaseContext)
+  const firebase = useFirebase()
 
   const [form] = Form.useForm();
 
   const onFinish = values => {
     const {email, password, username} = values;
-    console.log('Received values of form: ', values);
-    firebase
-      .doCreateUserWithEmailAndPassword(email, password)
-      .then(authUser => {
-          // Create a user in your Firebase realtime database
-          return firebase
-          .user(authUser.user.uid)
-          .set({
-          username,
-          email
-          });
-        })
-        .then(() => {
-        message.success('successfully signed in!');
-        setTimeout(() => props.history.push("/"), 500);
-      })
-      .catch(error => {
-        message.error(error.message);
-        });
+
+    firebase.createUser(
+      { email, password },
+      { username, email }
+    )
+    .then(() => {
+      message.success('successfully signed in!');
+      setTimeout(() => props.history.push("/"), 500);
+    })
+    .catch(error => {
+      message.error(error.message);
+      });
   };
 
   const onWebsiteChange = value => {

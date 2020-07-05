@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
+import { useSelector } from 'react-redux'
+import { useFirebase } from 'react-redux-firebase'
 import { Layout, Menu, Breadcrumb, Typography } from 'antd';
-import './App.css';
 import {createUseStyles} from 'react-jss'
-import FirebaseContext from './Contexts/firebaseContext';
-import {useAuth} from './Contexts/userContext'
+import './App.css';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -35,7 +35,7 @@ const useStyles = createUseStyles({
   }
 });
 
-function AppLayout({children, history, location, match}) {
+function AppLayout({children, match}) {
 
   const urlToArr = (url) => {
     return url
@@ -47,8 +47,13 @@ function AppLayout({children, history, location, match}) {
 
   const classes = useStyles()
   const urlArray = urlToArr(match.url)
-  const firebase = useContext(FirebaseContext)
-  const { user } = useAuth()
+
+  const firebase = useFirebase()
+  const profile = useSelector(state => state.firebase.profile)
+  const kitchens = useSelector( ({firebase: {data}}) => data.kitchens)
+
+  const kitchenId = profile.isEmpty ? "" : profile.kitchenId
+  const kitchenEdit = kitchens && kitchens[kitchenId] ? `/kitchen/edit/${kitchens[kitchenId].id}` : `/`
 
   return (
     <Layout>
@@ -58,22 +63,26 @@ function AppLayout({children, history, location, match}) {
         level={3}
         >
         <Link to="/">MamaKitchen</Link></Title>
-        {user ?
-          <Menu theme="dark" mode="horizontal" className={classes.menu}>
-            <Menu.Item key="1">
-
-              <Link to="/kitchen/edit/new">new kitchen</Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Link to="/" onClick={firebase.doSignOut}>Sign Out</Link>
-            </Menu.Item>
-          </Menu>
-        : <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
+        {profile.isEmpty ?
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} className={classes.menu}>
             <Menu.Item key="1">
               <Link to="/login">Log In</Link>
             </Menu.Item>
             <Menu.Item key="2">
               <Link to="/signin">Sign In</Link>
+            </Menu.Item>
+          </Menu>
+        : <Menu theme="dark" mode="horizontal" className={classes.menu}>
+            {kitchenId ?
+              <Menu.Item key="1">
+                <Link to={kitchenEdit}>Edit kitchen</Link>
+              </Menu.Item>
+            : <Menu.Item key="1">
+                <Link to="/newKitchen">new kitchen</Link>
+              </Menu.Item>
+            }
+            <Menu.Item key="2">
+              <Link to="/" onClick={firebase.logout} >Sign Out</Link>
             </Menu.Item>
           </Menu>
         }

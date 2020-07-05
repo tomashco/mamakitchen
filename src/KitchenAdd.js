@@ -1,5 +1,5 @@
-import React, {useState } from 'react';
-import { isLoaded, isEmpty, useFirebase } from 'react-redux-firebase'
+import React, { useState } from 'react';
+import { useFirebaseConnect, useFirebase } from 'react-redux-firebase'
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import {createUseStyles} from 'react-jss'
@@ -7,7 +7,7 @@ import { Typography, Space, Input, Form, Button, message } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
 import sizes from "./styles/sizes";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { TextArea } = Input;
 
 const useStyles = createUseStyles({
@@ -25,48 +25,46 @@ const useStyles = createUseStyles({
   }
 });
 
-const KitchenEdit = (props) => {
+const KitchenAdd = (props) => {
 
+  const [kitchenDesc, setKitchenDesc] = useState("")
+  const [newChefDesc, setChefDesc] = useState("")
+  const [kitchenName, setKitchenName] = useState("")
+  const [kitchenId, setKitchenId] = useState("")
+  const [kitchenImg, setKitchenImg] = useState("")
   const classes = useStyles()
 
-  const firebase = useFirebase();
+  const firebase = useFirebase()
   const profile = useSelector(state => state.firebase.profile)
-  const kitchen = useSelector(({ firebase: { data } }) => data.kitchens[profile.kitchenId])
+  useFirebaseConnect([
+    { path: '/users', queryParams: [ 'orderByChild=email', 'parsed', `equalTo=${profile.email}` ] }
+  ])
 
-  const {name, description, chefDesc, src, userId} = kitchen
-  const kitchenId = name.toLowerCase().replaceAll(" ", "-")
+  const user = useSelector(
+    ({ firebase: { data } }) => data.users
+    )
 
-  const [kitchenDesc, setKitchenDesc] = useState(description)
-  const [newChefDesc, setChefDesc] = useState(chefDesc)
-  const [kitchenImg, setKitchenImg] = useState(src)
+  const userId = user ? Object.getOwnPropertyNames(user)[0] : ""
 
-  if (!isLoaded(kitchen)) {
-    return (
-      <div className={classes.kitchenList}>
-        {"Kitchen will be Loaded soon"}
-      </div>
-      );
-    }
-
-    if (isEmpty(kitchen)) {
-      return (
-        <div className={classes.kitchenList}>
-          {"oops, there is no kitchen"}
-        </div>
-      );
+  const setKitchenNameId = (e) => {
+    setKitchenName(e.target.value)
+    setKitchenId(e.target.value === undefined ? "" : e.target.value.toLowerCase().replaceAll(" ", "-"))
   }
 
   const onFinish = () => {
     const postData = {
+      name: kitchenName,
       src: kitchenImg,
       chefDesc: newChefDesc,
       description: kitchenDesc,
+      id: kitchenId,
       userId: userId
     };
 
-    return firebase.update(`kitchens/${profile.kitchenId}`, postData)
-      .then(() => {
+    return firebase.push("kitchens", postData)
+      .then((value) => {
       message.success('kitchen modified!');
+      firebase.update(`users/${userId}`, {kitchenId: value.path.pieces_[1]})
       setTimeout(() =>
       props.history.push(`/kitchen/${kitchenId}`),500)
       })
@@ -77,23 +75,35 @@ const KitchenEdit = (props) => {
 
   return (
       <Space direction="vertical" className={classes.space}>
-        <Title level={1}>Edit the kitchen</Title>
+        <Title level={1}>Create your kitchen</Title>
         <Form
         name="setKitchen"
         onFinish={onFinish}
         >
-          <Title level={2}>{name}</Title>
+          <Form.Item name="name">
+            <div style={{display: "flex", alignItems: "center"}}>
+              <div style={{ margin: '24px 0' }} />
+              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Kitchen name:</Title>
+              <Input
+                style={{flexGrow: 2}}
+                placeholder="kitchen name"
+                value={kitchenName}
+                onChange={e => setKitchenNameId(e)}
+              />
+            </div>
+              <Text strong>/kitchen/{kitchenId}</Text>
+          </Form.Item>
           <Form.Item name="kitchenImg">
             <div style={{display: "flex", alignItems: "center"}}>
               <div style={{ margin: '24px 0' }} />
               <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Image:</Title>
-                <Input
-                  style={{flexGrow: 2}}
-                  placeholder="kitchen image"
-                  prefix={<FileImageOutlined className="site-form-item-icon" />}
-                  value={kitchenImg}
-                  onChange={e => setKitchenImg(e.target.value)}
-                />
+              <Input
+                style={{flexGrow: 2}}
+                placeholder="kitchen image"
+                prefix={<FileImageOutlined className="site-form-item-icon" />}
+                value={kitchenImg}
+                onChange={e => setKitchenImg(e.target.value)}
+              />
             </div>
           </Form.Item>
           <Form.Item >
@@ -119,7 +129,7 @@ const KitchenEdit = (props) => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Update
+              Create
             </Button>
           </Form.Item>
         </Form>
@@ -127,4 +137,4 @@ const KitchenEdit = (props) => {
   );
 }
 
-export default KitchenEdit;
+export default KitchenAdd;

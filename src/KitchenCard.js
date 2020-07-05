@@ -1,9 +1,10 @@
 import React from 'react';
-import 'antd/dist/antd.css';
-import './index.css';
+import { useSelector } from "react-redux";
 import { Card, Button, Typography } from 'antd';
 import {createUseStyles} from 'react-jss'
 import sizes from "./styles/sizes";
+import 'antd/dist/antd.css';
+import './index.css';
 
 const { Title } = Typography;
 
@@ -26,8 +27,9 @@ const useStyles = createUseStyles({
   }
 });
 
-const KitchenCard = ({kitchenInfo, history}) => {
-  const {name, src, description, id} = kitchenInfo;
+const KitchenCard = ({uid, history}) => {
+  const kitchen = useSelector(state => state.firebase.data.kitchens[uid]);
+  const {id, src, name, description} = kitchen;
 
   const goToKitchen = () => {
     history.push(`/kitchen/${id}`);
@@ -36,19 +38,19 @@ const KitchenCard = ({kitchenInfo, history}) => {
   const classes = useStyles()
   return (
     <Card
-    hoverable
-    className={classes.container}
-    cover={<img alt={src} src={src} />}
-    >
-        <Title level={3}>{name}</Title>
-    {description}
-    <div className={classes.button}>
-      <Button
-        type="primary"
-        className={classes.button}
-        onClick={goToKitchen}
-        >See More</Button>
-    </div>
+      hoverable
+      className={classes.container}
+      cover={<img alt={src} src={src} />}
+      >
+      <Title level={3}>{name}</Title>
+      {description}
+      <div className={classes.button}>
+        <Button
+          type="primary"
+          className={classes.button}
+          onClick={goToKitchen}
+          >See More</Button>
+      </div>
     </Card>
   );
 }

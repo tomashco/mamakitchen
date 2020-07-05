@@ -1,12 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import FirebaseContext from './Contexts/firebaseContext';
-
+import { useFirebase } from 'react-redux-firebase'
 import {createUseStyles} from 'react-jss'
 import { message, Space, Typography, Form, Input, Button, Checkbox } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import sizes from "./styles/sizes";
-import { useContext } from 'react';
 
 const { Title } = Typography;
 
@@ -23,12 +21,15 @@ const useStyles = createUseStyles({
 
 const Login = (props) => {
   const classes = useStyles()
-  const firebase = useContext(FirebaseContext)
+  const firebase = useFirebase()
 
   const onFinish = values => {
     const {email, password} = values;
     firebase
-      .doSignInWithEmailAndPassword(email, password)
+      .login({
+      email: email,
+      password: password
+      })
       .then(authUser => {
         message.success('successfully logged in!');
         setTimeout(() => props.history.push("/"), 500);
@@ -37,7 +38,6 @@ const Login = (props) => {
       .catch(error => {
         message.error(error.message);
       });
-
   };
 
   return (

@@ -1,5 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import React from 'react';
+import {Link, useParams} from 'react-router-dom';
+import { useFirebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import {createUseStyles} from 'react-jss'
 import RecipeList from './RecipeList'
@@ -8,11 +10,8 @@ import {
   Rate,
   Space,
   Tag,
-  Button,
-  Result
+  Button
 } from 'antd';
-import {useAuth} from './Contexts/userContext'
-import firebase from 'firebase'
 
 const { Title, Text } = Typography;
 
@@ -23,39 +22,41 @@ const useStyles = createUseStyles({
   }
 });
 
-const Kitchen = ({kitchenInfo, recipes}) => {
-  const {name, description, chefDesc, id} = kitchenInfo;
+function Kitchen() {
+
+  const { id } = useParams()
   const classes = useStyles()
-  const { user } = useAuth()
-  const [userKitchenId, setUserKitchenId] = useState("")
-  const [kitchenId, setKitchenId] = useState("")
+  useFirebaseConnect([
+    { path: '/kitchens', queryParams: [ 'orderByChild=id', 'parsed', `equalTo=${id}` ] }
+  ])
+  const kitchen = useSelector(({ firebase: { data } }) => data.kitchens)
+  const profile = useSelector(state => state.firebase.profile)
 
-  useEffect(() => {
-    firebase.database().ref(`/kitchens/`).once('value').then(function(snapshot) {
-      snapshot.forEach(el => {
-        if(user && el.val().userId === user.uid){
-          setUserKitchenId(el.val().id)
-        }
-      })
-    })
-    firebase.database().ref(`/kitchens/`).once('value').then(function(snapshot) {
-      snapshot.forEach(el => {
-        if(el.val().id === id){
-        setKitchenId(el.val().id)
-        }
-      })
-    })
-  })
-  //console.log(kitchenId, userKitchenId)
+  if (!isLoaded(kitchen)) {
+    return (
+      <div className={classes.kitchenList}>
+        {"Kitchen will be Loaded soon"}
+      </div>
+      );
+    }
 
+    if (isEmpty(kitchen)) {
+      return (
+        <div className={classes.kitchenList}>
+          {"oops, there is no kitchen"}
+        </div>
+      );
+  }
+  const {name, description, chefDesc} = kitchen[Object.getOwnPropertyNames(kitchen)[0]]
   return (
       <Space direction="vertical">
         <Space className={classes.title}>
           <Title level={1}>{name}</Title>
-          {userKitchenId === kitchenId &&
+          { profile.kitchenId === Object.getOwnPropertyNames(kitchen)[0] &&
           <Button type="primary" htmlType="submit">
             <Link to={`/kitchen/edit/${id}`}>Modify</Link>
-          </Button>}
+          </Button>
+          }
         </Space>
         <Space direction="horizontal">
         <Tag>Vegan</Tag>
@@ -64,8 +65,6 @@ const Kitchen = ({kitchenInfo, recipes}) => {
         </Space>
         <Rate allowHalf defaultValue={2.5} />
         <Text>{description}</Text>
-        <Title level={2}>Recipes</Title>
-          <RecipeList recipes={recipes}/>
         <Title level={3}>About the Chef</Title>
           {chefDesc}
       </Space>
