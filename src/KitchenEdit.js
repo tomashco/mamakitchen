@@ -1,13 +1,15 @@
 import React, {useState } from 'react';
 import { isLoaded, isEmpty, useFirebase } from 'react-redux-firebase'
 import { useSelector } from 'react-redux'
-import 'antd/dist/antd.css';
-import {createUseStyles} from 'react-jss'
 import { Typography, Space, Input, Form, Button, message } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
+import 'antd/dist/antd.css';
+import {createUseStyles} from 'react-jss'
+import RecipeList from './RecipeList'
+
 import sizes from "./styles/sizes";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { TextArea } = Input;
 
 const useStyles = createUseStyles({
@@ -33,12 +35,13 @@ const KitchenEdit = (props) => {
   const profile = useSelector(state => state.firebase.profile)
   const kitchen = useSelector(({ firebase: { data } }) => data.kitchens[profile.kitchenId])
 
-  const {name, description, chefDesc, src, userId} = kitchen
-  // const kitchenId = name.toLowerCase().replaceAll(" ", "-")
+  const {name, description, chefDesc, src, userId, } = kitchen
 
   const [kitchenDesc, setKitchenDesc] = useState(description)
   const [newChefDesc, setChefDesc] = useState(chefDesc)
   const [kitchenImg, setKitchenImg] = useState(src)
+  const [recipeName, setRecipeName] = useState("")
+  const [recipeImg, setRecipeImg] = useState("")
 
   if (!isLoaded(kitchen)) {
     return (
@@ -74,6 +77,20 @@ const KitchenEdit = (props) => {
       message.error(error.message);
     })
   };
+
+  const addNewRecipe = () => {
+    const recipeData = {
+      src: recipeImg,
+      name: recipeName
+    };
+
+    return firebase.push(`kitchens/${profile.kitchenId}/recipes`, recipeData)
+      .then(() => {
+      message.success('new recipe added!');
+      setRecipeName("")
+      setRecipeImg("")
+      })
+  }
 
   return (
       <Space direction="vertical" className={classes.space}>
@@ -115,8 +132,35 @@ const KitchenEdit = (props) => {
             onChange={e => setChefDesc(e.target.value)}
             autoSize />
             </div>
-          <div style={{ margin: '24px 0' }} />
+          {/* <div style={{ margin: '24px 0' }} /> */}
           </Form.Item>
+            <Form.Item>
+                <Title style={{marginRight: "1rem"}} level={4}>Add a new recipe</Title>
+                <div style={{display: "flex", alignItems: "center"}}>
+                  <Text strong style={{marginRight: "1rem", width: "20%"}}>Name:</Text>
+                    <Input
+                    placeholder="Recipe name"
+                    value={recipeName}
+                    onChange={e => setRecipeName(e.target.value)}
+                    />
+                </div>
+                <div style={{ margin: '24px 0' }} />
+                <div style={{display: "flex", alignItems: "center"}}>
+                  <Text strong style={{marginRight: "1rem", width: "20%"}}>Image:</Text>
+                    <Input
+                    placeholder="Recipe image src"
+                    value={recipeImg}
+                    onChange={e => setRecipeImg(e.target.value)}
+                    />
+                </div>
+                <div style={{ margin: '24px 0' }} />
+                    <Button type="secondary" onClick={addNewRecipe}>
+                      Add
+                    </Button>
+
+            </Form.Item>
+          <RecipeList kitchenId={profile.kitchenId}/>
+            <div style={{ margin: '24px 0' }} />
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Update

@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 const useStyles = createUseStyles({
   container: {
-    width: "30%",
+    width: "22%",
     margin: "0.8rem",
     [sizes.down("md")]:{
       width: "43%",
@@ -20,19 +20,30 @@ const useStyles = createUseStyles({
       width: "100%",
     }
   },
-  button: {
-    marginTop:"1rem",
+  content: {
+    height: "130px",
     display: "flex",
-    justifyContent: "flex-end"
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  cardImg: {
+    width: "100%",
+    height: "200px",
+    objectFit: "cover"
+  },
+  button: {
+    marginBottom: "1rem"
   }
 });
 
 const KitchenCard = ({uid, history}) => {
   const kitchen = useSelector(state => state.firebase.data.kitchens[uid]);
-  const {id, src, name, description} = kitchen;
+  const {id, src, name} = kitchen;
 
   const goToKitchen = () => {
-    history.push(`/kitchen/${id}`);
+    history.push({
+      pathname:`/kitchen/${id}`,
+      uid: uid});
   }
 
   const classes = useStyles()
@@ -40,11 +51,12 @@ const KitchenCard = ({uid, history}) => {
     <Card
       hoverable
       className={classes.container}
-      cover={<img alt={src} src={src} />}
+      cover={<img className={classes.cardImg} alt={src} src={src} />}
       >
-      <Title level={3}>{name}</Title>
-      {description}
-      <div className={classes.button}>
+      <div className={classes.content}>
+      <Title
+      style={{margin: "0 auto"}}
+      level={4}>{name}</Title>
         <Button
           type="primary"
           className={classes.button}

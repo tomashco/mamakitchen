@@ -3,6 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 
 //Pages
 import AppLayout from './AppLayout'
+import MamaKitchen from './MamaKitchen'
 import KitchenList from './KitchenList'
 import Kitchen from './Kitchen'
 import KitchenAdd from './KitchenAdd'
@@ -36,7 +37,6 @@ const App = () => {
               <AppLayout {...routeProps} >
                 <KitchenAdd
                   {...routeProps}
-                  //recipes = {getRecipes(routeProps.match.params.id)}
                   />
               </AppLayout>
               )}
@@ -46,7 +46,6 @@ const App = () => {
               <AppLayout {...routeProps} >
                 <KitchenEdit
                   {...routeProps}
-                  //recipes = {getRecipes(routeProps.match.params.id)}
                   />
               </AppLayout>
               )}
@@ -64,16 +63,22 @@ const App = () => {
             exact
             path="/"
             render={(routeProps) => (
+                <>
+                <MamaKitchen />
                 <AppLayout {...routeProps} >
                   <KitchenList {...routeProps} />
                 </AppLayout>
+                </>
               )}
             />
           <Route
             render={(routeProps) => (
+              <>
+              <MamaKitchen />
               <AppLayout {...routeProps} >
                 <KitchenList {...routeProps} />
               </AppLayout>
+              </>
               )}/>
         </Switch>
       )}/>

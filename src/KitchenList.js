@@ -23,7 +23,6 @@ const useStyles = createUseStyles({
 
 function KitchenList({history}) {
   const classes = useStyles()
-
   // Attach item listener
   useFirebaseConnect(() => [kitchensQuery]);
 

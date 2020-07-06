@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, useParams} from 'react-router-dom';
-import { useFirebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
 import { useSelector } from 'react-redux'
 import 'antd/dist/antd.css';
 import {createUseStyles} from 'react-jss'
@@ -22,16 +22,16 @@ const useStyles = createUseStyles({
   }
 });
 
-function Kitchen() {
+function Kitchen({location}) {
 
   const { id } = useParams()
+  const kitchenId = location.uid
   const classes = useStyles()
-  useFirebaseConnect([
-    { path: '/kitchens', queryParams: [ 'orderByChild=id', 'parsed', `equalTo=${id}` ] }
-  ])
-  const kitchen = useSelector(({ firebase: { data } }) => data.kitchens)
-  const profile = useSelector(state => state.firebase.profile)
 
+  const kitchen = useSelector(({ firebase: { data } }) => data.kitchens[kitchenId])
+
+
+  const profile = useSelector(state => state.firebase.profile)
   if (!isLoaded(kitchen)) {
     return (
       <div className={classes.kitchenList}>
@@ -47,12 +47,12 @@ function Kitchen() {
         </div>
       );
   }
-  const {name, description, chefDesc} = kitchen[Object.getOwnPropertyNames(kitchen)[0]]
+  const {name, description, chefDesc} = kitchen
   return (
       <Space direction="vertical">
         <Space className={classes.title}>
           <Title level={1}>{name}</Title>
-          { profile.kitchenId === Object.getOwnPropertyNames(kitchen)[0] &&
+          { profile.kitchenId === kitchenId &&
           <Button type="primary" htmlType="submit">
             <Link to={`/kitchen/edit/${id}`}>Modify</Link>
           </Button>
@@ -65,6 +65,7 @@ function Kitchen() {
         </Space>
         <Rate allowHalf defaultValue={2.5} />
         <Text>{description}</Text>
+        <RecipeList kitchenId={kitchenId} />
         <Title level={3}>About the Chef</Title>
           {chefDesc}
       </Space>

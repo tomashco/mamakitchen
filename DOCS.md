@@ -1,17 +1,14 @@
 # Mamakitchen
-Mamakitchen wants to be a meals marketplace open to every chef that wants to sell his food.
-Through the platform every Chef is able to show his personal selection of meals and let the user place his order.
+Mamakitchen wants to be the homemade recipes marketplace, ideally open to every chef that wants to sell his own food.
+Through the platform the Chef is able to show his personal selection of recipes, together with a description of his own kitchen and of himself.
+The user can navigate through each kitchen, select the quantity of meals that he wants and place an order
 
 ## For Chefs:
-- Login
-  - new Kitchen OR edit Kitchen <-- same component, prefilled with kitchen data if present
-    - add/modify kitchen description (see ## Kitchen page)
-    - add/modify new dishes (i.e. todolist)
-      - a/m image
-      - a/m name
-      - a/m description
-      - a/m max quantity
-    - define/modify availability
+- Sign in
+- Login/Logout
+  - Create new kitchen OR edit the existing one
+    - add/modify kitchen name, description and Chef description;
+    - add/modify recipes (add/modify image and description and max quantity available)
 
 ## Unlogged users:
 - see a list of kitchens;
@@ -19,10 +16,10 @@ Through the platform every Chef is able to show his personal selection of meals 
   - see the list of meals available
   - place an order:
     - define quantity and mealtime
-    - proceed to checkout
+    - proceed to checkout -> reach the checkout page.
 
 ## Kitchen page
-Every chef owns a kitchen.
+Every chef has its own kitchen.
 The main informations regarding each kitchen are:
 - Address
 - general description
