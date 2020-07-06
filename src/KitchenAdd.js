@@ -48,7 +48,7 @@ const KitchenAdd = (props) => {
 
   const setKitchenNameId = (e) => {
     setKitchenName(e.target.value)
-    setKitchenId(e.target.value === undefined ? "" : e.target.value.toLowerCase().replaceAll(" ", "-"))
+    setKitchenId(e.target.value === undefined ? "" : e.target.value.toLowerCase().split(" ").join("-"))
   }
 
   const onFinish = () => {

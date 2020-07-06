@@ -34,7 +34,7 @@ const KitchenEdit = (props) => {
   const kitchen = useSelector(({ firebase: { data } }) => data.kitchens[profile.kitchenId])
 
   const {name, description, chefDesc, src, userId} = kitchen
-  const kitchenId = name.toLowerCase().replaceAll(" ", "-")
+  // const kitchenId = name.toLowerCase().replaceAll(" ", "-")
 
   const [kitchenDesc, setKitchenDesc] = useState(description)
   const [newChefDesc, setChefDesc] = useState(chefDesc)
@@ -68,7 +68,7 @@ const KitchenEdit = (props) => {
       .then(() => {
       message.success('kitchen modified!');
       setTimeout(() =>
-      props.history.push(`/kitchen/${kitchenId}`),500)
+      props.history.push(`/kitchen/${kitchen.id}`),500)
       })
     .catch(error => {
       message.error(error.message);

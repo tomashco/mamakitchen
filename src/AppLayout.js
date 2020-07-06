@@ -39,7 +39,8 @@ function AppLayout({children, match}) {
 
   const urlToArr = (url) => {
     return url
-      .replaceAll("-", " ")
+      .split(" ")
+      .join("-")
       .split("/")
       .filter(el => el !== "")
       .map(str => str.charAt(0).toUpperCase() + str.slice(1))
