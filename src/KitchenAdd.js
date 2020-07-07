@@ -22,6 +22,23 @@ const useStyles = createUseStyles({
   kitchenName: {
     fontSize: "2rem",
     textWeight: "bold"
+  },
+  formItem: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    // [sizes.down("md")]:{
+    // },
+  },
+  formTitle: {
+    marginRight: "1rem",
+    width: "20%",
+    width: "100%",
+    // [sizes.down("md")]:{
+    // },
+  },
+  verticalSpace: {
+    margin: '24px 0'
   }
 });
 
@@ -81,9 +98,9 @@ const KitchenAdd = (props) => {
         onFinish={onFinish}
         >
           <Form.Item name="name">
-            <div style={{display: "flex", alignItems: "center"}}>
-              <div style={{ margin: '24px 0' }} />
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Kitchen name:</Title>
+            <div className={classes.formItem}>
+              <div className={classes.verticalSpace} />
+              <Title className={classes.formTitle} level={4}>Kitchen name:</Title>
               <Input
                 style={{flexGrow: 2}}
                 placeholder="kitchen name"
@@ -94,9 +111,9 @@ const KitchenAdd = (props) => {
               <Text strong>/kitchen/{kitchenId}</Text>
           </Form.Item>
           <Form.Item name="kitchenImg">
-            <div style={{display: "flex", alignItems: "center"}}>
-              <div style={{ margin: '24px 0' }} />
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Image:</Title>
+            <div className={classes.formItem}>
+              <div className={classes.verticalSpace} />
+              <Title className={classes.formTitle} level={4}>Image:</Title>
               <Input
                 style={{flexGrow: 2}}
                 placeholder="kitchen image"
@@ -107,8 +124,8 @@ const KitchenAdd = (props) => {
             </div>
           </Form.Item>
           <Form.Item >
-          <div style={{display: "flex", alignItems: "center"}}>
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Kitchen Description:</Title>
+          <div className={classes.formItem}>
+              <Title className={classes.formTitle} level={4}>Kitchen Description:</Title>
           <TextArea
             placeholder="kitchen description"
             value={kitchenDesc}
@@ -117,15 +134,15 @@ const KitchenAdd = (props) => {
           </div>
           </Form.Item>
           <Form.Item>
-          <div style={{display: "flex", alignItems: "center"}}>
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Chef description:</Title>
+          <div className={classes.formItem}>
+              <Title className={classes.formTitle} level={4}>Chef description:</Title>
           <TextArea
             placeholder="Chef description"
             value={newChefDesc}
             onChange={e => setChefDesc(e.target.value)}
             autoSize />
             </div>
-          <div style={{ margin: '24px 0' }} />
+          <div className={classes.verticalSpace} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

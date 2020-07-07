@@ -17,13 +17,30 @@ const useStyles = createUseStyles({
     display: "flex",
     width: "50%",
     margin: "0 auto",
-    [sizes.down("sm")]:{
+    [sizes.down("md")]:{
       width: "100%",
-    }
+    },
   },
   kitchenName: {
     fontSize: "2rem",
     textWeight: "bold"
+  },
+  formItem: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    // [sizes.down("md")]:{
+    // },
+  },
+  formTitle: {
+    marginRight: "1rem",
+    width: "20%",
+    width: "100%",
+    // [sizes.down("md")]:{
+    // },
+  },
+  verticalSpace: {
+    margin: '24px 0'
   }
 });
 
@@ -101,9 +118,9 @@ const KitchenEdit = (props) => {
         >
           <Title level={2}>{name}</Title>
           <Form.Item name="kitchenImg">
-            <div style={{display: "flex", alignItems: "center"}}>
-              <div style={{ margin: '24px 0' }} />
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Image:</Title>
+            <div className={classes.formItem}>
+            <div className={classes.verticalSpace} />
+              <Title className={classes.formTitle} level={4}>Image:</Title>
                 <Input
                   style={{flexGrow: 2}}
                   placeholder="kitchen image"
@@ -113,9 +130,9 @@ const KitchenEdit = (props) => {
                 />
             </div>
           </Form.Item>
-          <Form.Item >
-          <div style={{display: "flex", alignItems: "center"}}>
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Kitchen Description:</Title>
+          <Form.Item>
+          <div className={classes.formItem}>
+              <Title className={classes.formTitle} level={4}>Kitchen Description:</Title>
           <TextArea
             placeholder="kitchen description"
             value={kitchenDesc}
@@ -124,8 +141,8 @@ const KitchenEdit = (props) => {
           </div>
           </Form.Item>
           <Form.Item>
-          <div style={{display: "flex", alignItems: "center"}}>
-              <Title style={{marginRight: "1rem", width: "20%"}} level={4}>Chef description:</Title>
+          <div className={classes.formItem}>
+              <Title className={classes.formTitle} level={4}>Chef description:</Title>
           <TextArea
             placeholder="Chef description"
             value={newChefDesc}
@@ -135,32 +152,32 @@ const KitchenEdit = (props) => {
           {/* <div style={{ margin: '24px 0' }} /> */}
           </Form.Item>
             <Form.Item>
-                <Title style={{marginRight: "1rem"}} level={4}>Add a new recipe</Title>
-                <div style={{display: "flex", alignItems: "center"}}>
-                  <Text strong style={{marginRight: "1rem", width: "20%"}}>Name:</Text>
+                <Title className={classes.formTitle} level={4}>Add a new recipe</Title>
+                <div className={classes.formItem}>
+                  {/* <Text strong className={classes.formTitle}>Name:</Text> */}
                     <Input
                     placeholder="Recipe name"
                     value={recipeName}
                     onChange={e => setRecipeName(e.target.value)}
                     />
                 </div>
-                <div style={{ margin: '24px 0' }} />
-                <div style={{display: "flex", alignItems: "center"}}>
-                  <Text strong style={{marginRight: "1rem", width: "20%"}}>Image:</Text>
+                <div className={classes.verticalSpace} />
+                <div className={classes.formItem}>
+                  {/* <Text strong className={classes.formTitle}>Image:</Text> */}
                     <Input
                     placeholder="Recipe image src"
                     value={recipeImg}
                     onChange={e => setRecipeImg(e.target.value)}
                     />
                 </div>
-                <div style={{ margin: '24px 0' }} />
+                <div className={classes.verticalSpace} />
                     <Button type="secondary" onClick={addNewRecipe}>
                       Add
                     </Button>
 
             </Form.Item>
           <RecipeList kitchenId={profile.kitchenId}/>
-            <div style={{ margin: '24px 0' }} />
+            <div className={classes.verticalSpace} />
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Update

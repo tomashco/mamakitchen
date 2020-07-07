@@ -12,7 +12,11 @@ const useStyles = createUseStyles({
 recipeRow: {
   display: "flex",
   justifyContent: "flex-start",
-  padding: "1rem"
+  padding: "1rem",
+  '& img': {
+    width: 100,
+    height: 100
+  }
 },
 recipeContent: {
   padding: "1rem"
@@ -52,7 +56,7 @@ const RecipeList = ({kitchenId}) => {
     .map(({ value: recipe, key }, ind) => (
       <div key={key} className={classes.recipeRow}>
          <img
-          width={100}
+          // width={100}
           alt={recipe.name}
           src={recipe.src}
           />
