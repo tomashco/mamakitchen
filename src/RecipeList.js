@@ -1,74 +1,172 @@
-import React from 'react';
-import { isLoaded, isEmpty, useFirebaseConnect } from 'react-redux-firebase'
-import { useSelector } from 'react-redux'
-import {createUseStyles} from 'react-jss'
-import { Space } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
-import { Typography } from 'antd';
+import React, { useState } from "react";
+import { isLoaded, isEmpty, useFirebaseConnect } from "react-redux-firebase";
+import { useSelector } from "react-redux";
+import { createUseStyles } from "react-jss";
+import { Typography, InputNumber, Button, Modal, message, Form } from "antd";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const useStyles = createUseStyles({
-recipeRow: {
-  display: "flex",
-  justifyContent: "flex-start",
-  padding: "1rem",
-  '& img': {
-    width: 100,
-    height: 100
-  }
-},
-recipeContent: {
-  padding: "1rem"
-}
+  recipeRow: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "1rem",
+    width: "100%",
+    "& img": {
+      width: 100,
+      height: 100,
+    },
+  },
+  recipeContent: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+  recipeContentRow: {
+    display: "flex",
+    alignItems: "baseline",
+    justifyContent: "space-between",
+    padding: "0.5rem 0 0 1rem",
+  },
+  checkoutButton: {
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%",
+  },
 });
 
-// const IconText = ({ icon, text }) => (
-//   <Space>
-//     {React.createElement(icon)}
-//     {text}
-//   </Space>
-// );
+const RecipeList = ({ kitchenId }) => {
+  const classes = useStyles();
+  const [recipeCheckout, addRecipeToCheckout] = useState([]);
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const [form] = Form.useForm();
 
-const RecipeList = ({kitchenId}) => {
-  const classes = useStyles()
-  // useFirebaseConnect(() => [{
-  //   path: `kitchens/${kitchenId}/recipes`
-  // }]);
+  useFirebaseConnect(() => [
+    {
+      path: `kitchens/${kitchenId}/recipes`,
+    },
+  ]);
 
-  // Get todos from redux state
-  const recipes = useSelector(state => state.firebase.data.kitchens[kitchenId].recipes);
+  // Get recipes from redux state
+  const recipes = useSelector(
+    (state) => state.firebase.data.kitchens[kitchenId].recipes
+  );
 
-// Show a message while todos are loading
+  // Show a message while recipes are loading
   if (!isLoaded(recipes)) {
     return "Loading";
   }
 
-  // Show a message if there are no todos
+  // Show a message if there are no recipes
   if (isEmpty(recipes)) {
     return "Recipe list is empty";
   }
 
-  return Object.keys(recipes)
-    .map(function(key) {
-      return {key: key, value: recipes[key]};
-    })
-    .map(({ value: recipe, key }, ind) => (
-      <div key={key} className={classes.recipeRow}>
-         <img
-          // width={100}
-          alt={recipe.name}
-          src={recipe.src}
-          />
-          <div className={classes.recipeContent}>
-            <Title level={4}>{recipe.name}</Title>
-            {/* <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />
-            <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
-            <IconText icon={MessageOutlined} text="2" key="list-vertical-message" /> */}
-          </div>
-        </div>
+  const ProceedToCheckout = () => {
+    setModalVisibility(true);
+  };
 
-    ));
-  }
+  const modalHandleOk = (e) => {
+    console.log(e);
+    message.success("Order placed!");
+    setModalVisibility(false);
+    form.resetFields();
+  };
+
+  const modalHandleCancel = (e) => {
+    setModalVisibility(false);
+  };
+
+  return (
+    <Form
+      form={form}
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 12 }}
+      onFinish={ProceedToCheckout}
+    >
+      {Object.keys(recipes)
+        .map(function (key) {
+          return { key: key, value: recipes[key] };
+        })
+        .map(({ value: recipe, key }, ind) => (
+          <div key={key} className={classes.recipeRow}>
+            <img alt={recipe.name} src={recipe.src} />
+            <div className={classes.recipeContent}>
+              <div className={classes.recipeContentRow}>
+                <Title level={4}>{recipe.name}</Title>
+              </div>
+              <div className={classes.recipeContentRow}>
+                <Text strong>Quantity:</Text>
+                <Form.Item name={recipe.name} initialValue={0}>
+                  <InputNumber
+                    min={0}
+                    max={recipe.quantity}
+                    onChange={(orderQuantity) => {
+                      const recipeIndex = recipeCheckout.findIndex(
+                        (obj) => obj.recipe === recipe
+                      );
+                      if (recipeIndex === -1) {
+                        addRecipeToCheckout([
+                          ...recipeCheckout,
+                          {
+                            recipe: recipe,
+                            quantity: orderQuantity,
+                          },
+                        ]);
+                      } else {
+                        addRecipeToCheckout(
+                          recipeCheckout.map((obj) => {
+                            if (obj.recipe === recipe)
+                              return {
+                                recipe: recipe,
+                                quantity: orderQuantity,
+                              };
+                            return obj;
+                          })
+                        );
+                      }
+                    }}
+                  />
+                </Form.Item>
+              </div>
+            </div>
+          </div>
+        ))}
+      <div className={classes.checkoutButton}>
+        {recipeCheckout.length > 0 && (
+          <>
+            <Button type="primary" htmlType="submit">
+              Proceed to Checkout
+            </Button>
+            <Modal
+              title="Checkout"
+              visible={modalVisibility}
+              onOk={modalHandleOk}
+              onCancel={modalHandleCancel}
+            >
+              {recipeCheckout.map((obj) => {
+                return (
+                  <div key={obj.recipe.name} className={classes.recipeRow}>
+                    <img alt={obj.recipe.name} src={obj.recipe.src} />
+
+                    <div className={classes.recipeContent}>
+                      <div className={classes.recipeContentRow}>
+                        <Title level={4}>{obj.recipe.name}</Title>
+                      </div>
+                      <div className={classes.recipeContentRow}>
+                        <Text strong>Quantity:</Text>
+                        <Text strong>{obj.quantity}</Text>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </Modal>
+          </>
+        )}
+      </div>
+    </Form>
+  );
+};
 
 export default RecipeList;

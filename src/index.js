@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from "firebase/app";
+import "firebase/auth";
 import "firebase/database";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import configureStore from "./createStore";
-import {BrowserRouter} from "react-router-dom";
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 
 const fbConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -19,22 +19,26 @@ const fbConfig = {
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+};
+
+const rrfConfig = {
+  userProfile: "users",
+  preserveOnLogout: ["kitchens"],
 };
 
 try {
   firebase.initializeApp(fbConfig);
-} catch (err) {}
+} catch (err) {
+  console.log(err);
+}
 
 const store = configureStore();
 
 const rrfProps = {
   firebase,
-  config: {
-    userProfile: "users",
-    preserveOnLogout: ["kitchens"]
-  },
-  dispatch: store.dispatch
+  config: rrfConfig,
+  dispatch: store.dispatch,
 };
 
 render(
@@ -44,7 +48,9 @@ render(
         <App />
       </ReactReduxFirebaseProvider>
     </Provider>
-  </BrowserRouter>, document.getElementById("root"));
+  </BrowserRouter>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

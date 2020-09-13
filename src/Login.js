@@ -1,9 +1,17 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-import { useFirebase } from 'react-redux-firebase'
-import {createUseStyles} from 'react-jss'
-import { message, Space, Typography, Form, Input, Button, Checkbox } from 'antd'
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useFirebase } from "react-redux-firebase";
+import { createUseStyles } from "react-jss";
+import {
+  message,
+  Space,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+} from "antd";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import sizes from "./styles/sizes";
 
 const { Title } = Typography;
@@ -13,35 +21,33 @@ const useStyles = createUseStyles({
     display: "flex",
     width: "50%",
     margin: "0 auto",
-    [sizes.down("sm")]:{
+    [sizes.down("sm")]: {
       width: "100%",
-    }
-  }
+    },
+  },
 });
 
 const Login = (props) => {
-  const classes = useStyles()
-  const firebase = useFirebase()
+  const classes = useStyles();
+  const firebase = useFirebase();
 
-  const onFinish = values => {
-    const {email, password} = values;
-    firebase
+  const onFinish = (values) => {
+    const { email, password } = values;
+    return firebase
       .login({
-      email: email,
-      password: password
+        email: email,
+        password: password,
       })
-      .then(authUser => {
-        message.success('successfully logged in!');
+      .then((authUser) => {
+        message.success("successfully logged in!");
         setTimeout(() => props.history.push("/"), 500);
-        ;
       })
-      .catch(error => {
+      .catch((error) => {
         message.error(error.message);
       });
   };
 
   return (
-
     <Space direction="vertical" className={classes.space}>
       <Title level={1}>Log In</Title>
       <Form
@@ -51,27 +57,27 @@ const Login = (props) => {
         onFinish={onFinish}
       >
         <Form.Item
-        name="email"
-        rules={[
-          {
-            type: 'email',
-            message: 'The input is not valid E-mail!',
-          },
-          {
-            required: true,
-            message: 'Please input your E-mail!',
-          },
-        ]}
-      >
-        <Input
+          name="email"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+        >
+          <Input
             type="email"
             placeholder="E-mail"
             prefix={<MailOutlined className="site-form-item-icon" />}
           />
-      </Form.Item>
+        </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
+          rules={[{ required: true, message: "Please input your Password!" }]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
@@ -85,7 +91,11 @@ const Login = (props) => {
           </Form.Item>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
             Log in
           </Button>
           Or <Link to="/signin">register now!</Link>
@@ -93,6 +103,6 @@ const Login = (props) => {
       </Form>
     </Space>
   );
-}
+};
 
 export default Login;
