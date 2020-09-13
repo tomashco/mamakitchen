@@ -8,31 +8,11 @@ import {
 import { useSelector } from "react-redux";
 import { createUseStyles } from "react-jss";
 import { Typography, InputNumber } from "antd";
+import editRecipeListStyle from "./styles/editRecipeListStyle";
 
 const { Title, Text } = Typography;
 
-const useStyles = createUseStyles({
-  recipeRow: {
-    display: "flex",
-    justifyContent: "flex-start",
-    padding: "1rem",
-    "& img": {
-      width: 100,
-      height: 100,
-    },
-  },
-  recipeContent: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  recipeContentRow: {
-    display: "flex",
-    alignItems: "baseline",
-    justifyContent: "space-between",
-    padding: "0.5rem 0 0 1rem",
-  },
-});
+const useStyles = createUseStyles(editRecipeListStyle);
 
 const RecipeList = ({ kitchenId }) => {
   const classes = useStyles();

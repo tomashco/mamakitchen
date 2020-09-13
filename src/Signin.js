@@ -19,20 +19,11 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 
-import sizes from "./styles/sizes";
+import signinStyle from "./styles/signinStyle";
 
 const { Title } = Typography;
 
-const useStyles = createUseStyles({
-  space: {
-    display: "flex",
-    width: "50%",
-    margin: "0 auto",
-    [sizes.down("sm")]: {
-      width: "100%",
-    },
-  },
-});
+const useStyles = createUseStyles(signinStyle);
 
 const Signin = (props) => {
   const classes = useStyles();

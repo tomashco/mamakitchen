@@ -15,50 +15,12 @@ import "antd/dist/antd.css";
 import { createUseStyles } from "react-jss";
 import EditRecipeList from "./EditRecipeList";
 
-import sizes from "./styles/sizes";
+import kitchenEditStyle from "./styles/kitchenEditStyle";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 
-const useStyles = createUseStyles({
-  space: {
-    display: "flex",
-    width: "50%",
-    margin: "0 auto",
-    [sizes.down("md")]: {
-      width: "100%",
-    },
-  },
-  kitchenName: {
-    fontSize: "2rem",
-    textWeight: "bold",
-  },
-  formItem: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-  },
-  formQuantity: {
-    display: "flex",
-    alignItems: "left",
-    flexDirection: "row",
-  },
-  formQuantityTitle: {
-    width: "20%",
-  },
-  formTitle: {
-    marginRight: "1rem",
-    width: "100%",
-  },
-  verticalSpace: {
-    margin: "24px 0",
-  },
-  recipeFormSubmitRow: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
+const useStyles = createUseStyles(kitchenEditStyle);
 
 const KitchenEdit = (props) => {
   const classes = useStyles();

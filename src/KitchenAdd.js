@@ -5,37 +5,12 @@ import "antd/dist/antd.css";
 import { createUseStyles } from "react-jss";
 import { Typography, Space, Input, Form, Button, message } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
-import sizes from "./styles/sizes";
+import kitchenAddStyle from "./styles/kitchenAddStyle";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
 
-const useStyles = createUseStyles({
-  space: {
-    display: "flex",
-    width: "50%",
-    margin: "0 auto",
-    [sizes.down("sm")]: {
-      width: "100%",
-    },
-  },
-  kitchenName: {
-    fontSize: "2rem",
-    textWeight: "bold",
-  },
-  formItem: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-  },
-  formTitle: {
-    marginRight: "1rem",
-    width: "100%",
-  },
-  verticalSpace: {
-    margin: "24px 0",
-  },
-});
+const useStyles = createUseStyles(kitchenAddStyle);
 
 const KitchenAdd = (props) => {
   const [kitchenDesc, setKitchenDesc] = useState("");

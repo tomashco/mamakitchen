@@ -3,37 +3,11 @@ import { isLoaded, isEmpty, useFirebaseConnect } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { createUseStyles } from "react-jss";
 import { Typography, InputNumber, Button, Modal, message, Form } from "antd";
+import recipeListStyle from "./styles/recipeListStyle";
 
 const { Title, Text } = Typography;
 
-const useStyles = createUseStyles({
-  recipeRow: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "1rem",
-    width: "100%",
-    "& img": {
-      width: 100,
-      height: 100,
-    },
-  },
-  recipeContent: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-  recipeContentRow: {
-    display: "flex",
-    alignItems: "baseline",
-    justifyContent: "space-between",
-    padding: "0.5rem 0 0 1rem",
-  },
-  checkoutButton: {
-    display: "flex",
-    justifyContent: "flex-end",
-    width: "100%",
-  },
-});
+const useStyles = createUseStyles(recipeListStyle);
 
 const RecipeList = ({ kitchenId }) => {
   const classes = useStyles();

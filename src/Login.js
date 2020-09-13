@@ -12,20 +12,11 @@ import {
   Checkbox,
 } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import sizes from "./styles/sizes";
+import loginStyle from "./styles/loginStyle";
 
 const { Title } = Typography;
 
-const useStyles = createUseStyles({
-  space: {
-    display: "flex",
-    width: "50%",
-    margin: "0 auto",
-    [sizes.down("sm")]: {
-      width: "100%",
-    },
-  },
-});
+const useStyles = createUseStyles(loginStyle);
 
 const Login = (props) => {
   const classes = useStyles();
